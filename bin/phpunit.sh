@@ -1,0 +1,1 @@
+phpunit --include-path=./classes/test-suite-loader/ --loader=leieTestSuiteLoader $1

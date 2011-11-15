@@ -1,8 +1,3 @@
 VaL::leie
-^^^^^^^^^
-This library contains some useful tools to build web applications.
 
-INSTALLATION
-^^^^^^^^^^^^
-
-@TODO
+This library contains some useful tools to build web applications and based on ezcomponents.
