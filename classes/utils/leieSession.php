@@ -22,13 +22,33 @@ class leieSession
         }
 
         $sessionName = session_name();
-        $hasSessionCookie = isset( $_COOKIE[ $sessionName ] );
+        $hasSessionCookie = isset( $_COOKIE[$sessionName] );
         if ( $hasSessionCookie )
         {
+            self::setCookieParams( $cookieTimeout );
             return self::forceStart();
         }
 
         return false;
+    }
+
+    /**
+     * Set default cookie parameters based on site.ini settings (fallback to php.ini settings)
+     * Note: this will only have affect when session is created / re-created
+     *
+     * @since 4.4
+     * @param int|false $lifetime Cookie timeout of session cookie, will read from ini if not set
+    */
+    protected static function setCookieParams( $lifetime = false )
+    {
+        $params = session_get_cookie_params();
+
+        if ( $lifetime === false )
+        {
+            $lifetime = $params['lifetime'];
+        }
+
+        session_set_cookie_params( $lifetime, '/' );
     }
 
     public static function forceStart()
