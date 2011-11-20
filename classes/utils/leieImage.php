@@ -120,6 +120,62 @@ class leieImage
         return $converter;
     }
 
+    /**
+     * Returns transformation path
+     *
+     * @param (string)
+     * @return (string)
+     */
+    public function getTransformationPath( $name )
+    {
+        $info = pathinfo( $this->Path );
+        $dir = $info['dirname'];
+        $filename = $info['filename'] . '_' . $name;
+        $ext = $info['extension'];
+        $result = $dir . '/' .  $filename . '.' . $ext;
+
+        return $result;
+    }
+
+    /**
+     * Scales the image
+     *
+     * @param (int)
+     * @param (int)
+     * @return (string) Path to scalled image
+     */
+    public function scale( $width, $height )
+    {
+        $path = $this->getTransformationPath( $width . '_' . $height );
+        if ( file_exists( $path ) )
+        {
+            return $path;
+        }
+
+        $converter = self::getConverter();
+        $filter = new ezcImageFilter(
+                    'scale',
+                    array(
+                        'height' => $height,
+                        'width' => $width,
+                        'direction' => ezcImageGeometryFilters::SCALE_DOWN,
+                    )
+                );
+
+        $converter->createTransformation( 'scale', array( $filter ), array( 'image/jpeg', 'image/png' ) );
+
+        try
+        {
+            $converter->transform( 'scale', $this->Path, $path );
+        }
+        catch ( ezcImageTransformationException $e )
+        {
+            throw new leieInvalidArgumentException( $e->getMessage() );
+        }
+
+        return $path;
+    }
+
     public function transform( $name, $filterList = array() )
     {
         if ( !is_array( $filterList ) )

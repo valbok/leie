@@ -220,11 +220,13 @@ abstract class leieDBObject
 
         $stmt = $q->prepare();
         $stmt->execute();
-
+        $id = $db->lastInsertId();
         if ( $this->hasDefinitionAttribute( 'increment_key' ) )
         {
-            $this->FieldList[$this->getDefinitionAttribute( 'increment_key' )] = $db->lastInsertId();
+            $this->FieldList[$this->getDefinitionAttribute( 'increment_key' )] = $id;
         }
+
+        return $id;
     }
 
     /**

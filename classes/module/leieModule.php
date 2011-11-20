@@ -13,18 +13,27 @@
 abstract class leieModule
 {
     /**
-     * Submitted param list
-     *
+     * Submitted ordered param list
+     *     Key - is the name of the parameter
+     *     Value - its value
      * @var (array)
      */
     protected $ParamList = array();
 
     /**
-     * @param (array) @params
+     * Submitted param list
+     *
+     * @var (array)
      */
-    public function __construct( $params = array() )
+    protected $SubmittedParamList = array();
+
+    /**
+     * @param (array)
+     */
+    public function __construct( array $params = array(), array $submitted = array()  )
     {
         $this->ParamList = $params;
+        $this->SubmittedParamList = $submitted;
     }
 
     /**

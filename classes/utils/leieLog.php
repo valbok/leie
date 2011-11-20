@@ -1,38 +1,69 @@
 <?php
+/**
+ * @author VaL
+ * @copyright Copyright (C) 2011 VaL::bOK
+ * @license GNU GPL v2
+ * @package leie
+ */
 
-
+/**
+ * Logger
+ */
 class leieLog
 {
-    const ERROR_FILE = 'var/log/error.log';
-    const DEBUG_FILE = 'var/log/debug.log';
-    const NOTICE_FILE = 'var/log/notice.log';
+    static $ErrorFile = 'var/log/error.log';
+    static $DebugFile = 'var/log/debug.log';
+    static $NoticeFile = 'var/log/notice.log';
+
+    /**
+     * Inits file names
+     *
+     * @param (string)
+     * @param (string)
+     * @param (string)
+     */
+    public function __conscruct( $errorFile = false, $debugFile = false, $noticeFile = false )
+    {
+        self::$ErrorFile = $errorFile ? $errorFile : 'var/log/error.log';
+        self::$DebugFile = $debugFile ? $debugFile : 'var/log/debug.log';
+        self::$NoticeFile = $noticeFile ? $noticeFile : 'var/log/notice.log';
+    }
 
     /**
      * Append error text to log
+     *
+     * @return (bool)
      */
     public static function writeError( $text )
     {
-        return self::writeFile( self::ERROR_FILE, $text );
+        return self::writeFile( self::$ErrorFile, $text );
     }
 
     /**
      * Appends simple/debug text to log
+     *
+     * @return (bool)
      */
     public static function writeDebug( $text )
     {
-        return self::writeFile( self::DEBUG_FILE, $text );
+        return self::writeFile( self::$DebugFile, $text );
     }
 
     /**
      * Appends simple/debug text to log
+     *
+     * @return (bool)
      */
     public static function writeNotice( $text )
     {
-        return self::writeFile( self::NOTICE_FILE, $text );
+        return self::writeFile( self::$NoticeFile, $text );
     }
 
     /**
      * Writes \a $string to \a $fileName file
+     *
+     * @return (bool)
+     * @todo Add rotation
      */
     protected static function writeFile( $fileName, $string )
     {
@@ -46,7 +77,7 @@ class leieLog
         $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : $_SERVER['HOSTNAME'];
 
         $notice = "[ " . $time . " ] [" . $ip . ":" . session_id() . "] " . $string . "\n";
-        if ( !file_put_contents( $fileName, $notice ) )
+        if ( !file_put_contents( $fileName, $notice, FILE_APPEND ) )
         {
             return false;
         }

@@ -100,13 +100,16 @@ class leieModuleHandler
             return array();
         }
 
-        return explode( '/', $result );
+        $list = explode( '/', $result );
+        array_pop( $list );
+
+        return $list;
     }
 
     /**
      * Returns param list that is passed to module
      *
-     * @return (array) Key is the name of param. Value - its value. FALSE means no params have ben submitted
+     * @return (array) Key is the name of param. Value - its value. FALSE means no params have been submitted
      */
     protected static function createModuleParamList( array $definition = array(), array $submitted = array() )
     {
@@ -133,9 +136,11 @@ class leieModuleHandler
         $class = $settings['class'];
 
         $defParamList = ( isset( $settings['parameters'] ) and is_array( $settings['parameters'] ) ) ? $settings['parameters'] : array();
-        $paramList = self::createModuleParamList( $defParamList, $this->getSubmittedParamList( $uri, $filename ) );
+        $submittedParamList =  $this->getSubmittedParamList( $uri, $filename );
 
-        return new $class( $paramList );
+        $paramList = self::createModuleParamList( $defParamList, $submittedParamList );
+
+        return new $class( $paramList, $submittedParamList );
     }
 
     /**
