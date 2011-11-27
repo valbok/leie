@@ -8,7 +8,7 @@
  */
 
 /**
- * Class to handle templates
+ * Object to handle templates
  */
 class leieTemplate
 {
@@ -27,6 +27,11 @@ class leieTemplate
         $this->Dir = $dir;
     }
 
+    /**
+     * Wrapper to create the object
+     *
+     * @return (__CLASS__)
+     */
     public static function get( $dir = false )
     {
         return $dir ? new self( $dir ) : new self();

@@ -11,9 +11,25 @@
  */
 class leieSession
 {
+    /**
+     * User ID of logged in user
+     *
+     * @var (int)
+     */
     static protected $UserID = 0;
+
+    /**
+     * Has session started
+     *
+     * @var (bool)
+     */
     static protected $HasStarted = false;
 
+    /**
+     * Starts a session if needed
+     *
+     * @return (bool)
+     */
     public static function start( $cookieTimeout = false )
     {
         if ( self::$HasStarted )
@@ -33,11 +49,10 @@ class leieSession
     }
 
     /**
-     * Set default cookie parameters based on site.ini settings (fallback to php.ini settings)
+     * Set default cookie parameters based (fallback to php.ini settings)
      * Note: this will only have affect when session is created / re-created
      *
-     * @since 4.4
-     * @param int|false $lifetime Cookie timeout of session cookie, will read from ini if not set
+     * @param int|false $lifetime Cookie timeout of session cookie
     */
     protected static function setCookieParams( $lifetime = false )
     {
@@ -51,6 +66,11 @@ class leieSession
         session_set_cookie_params( $lifetime, '/' );
     }
 
+    /**
+     * Starts session
+     *
+     * @return (bool)
+     */
     public static function forceStart()
     {
         session_start();
@@ -61,8 +81,7 @@ class leieSession
      * Removes the current session and resets session variables.
      * Note: implicit stops session as well!
      *
-     * @since 4.1
-     * @return bool Depending on if session was removed.
+     * @return (bool) Depending on if session was removed.
      */
     static public function stop()
     {
@@ -76,6 +95,11 @@ class leieSession
         return true;
     }
 
+    /**
+     * Regenerates the session
+     *
+     * @return (bool)
+     */
     public static function regenerate()
     {
         if ( !self::$HasStarted )
@@ -88,7 +112,9 @@ class leieSession
     }
 
     /**
+     * Sets user ID to session
      *
+     * @return (void)
      */
     static public function setUserID( $userID = 0 )
     {
@@ -96,7 +122,9 @@ class leieSession
     }
 
     /**
+     * Returns user ID
      *
+     * @return (int)
      */
     public static function getUserID()
     {
@@ -106,9 +134,7 @@ class leieSession
     /**
      * Set session value (wrapper)
      *
-     * @since 4.4
-     * @param string $key
-     * @return bool
+     * @return (bool)
      */
     static public function set( $key, $value )
     {
@@ -124,7 +150,6 @@ class leieSession
     /**
      * Get session value (wrapper)
      *
-     * @since 4.4
      * @param string|null $key Return the whole session array if null otherwise the value of $key
      * @param null|mixed $defaultValue Return this if not null and session has not started
      * @return mixed|null $defaultValue if key does not exist, otherwise session value depending on $key

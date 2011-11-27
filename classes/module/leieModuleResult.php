@@ -7,37 +7,41 @@
  */
 
 /**
- *
+ * Module result.
+ * It is used to fetch proper pagelayout and handle content from module.
  */
 class leieModuleResult
 {
     /**
+     * Result content
      *
      * @var (string)
      */
     public $Result = '';
 
     /**
+     * Title of the page
      *
      * @var (string)
      */
     public $Title = '';
 
     /**
+     * Path to the page
      *
-     * @var (string)
+     * @var (array)
      */
     public $Path = array();
 
-
     /**
+     * Main template name
      *
      * @var (string)
      */
     protected $Pagelayout = '';
 
     /**
-     * @param (array) $dir Dir where modules are located
+     * @reimp
      */
     public function __construct( array $data = array() )
     {
@@ -47,6 +51,11 @@ class leieModuleResult
         $this->Path = isset( $data['path'] ) ? $data['path'] : array();
     }
 
+    /**
+     * Processes pagelayout and returns content of the page
+     *
+     * @return (string)
+     */
     public function handle()
     {
         $tpl = new leieTemplate();

@@ -1,8 +1,22 @@
 <?php
+/**
+ * @author VaL
+ * @copyright Copyright (C) 2011 VaL::bOK
+ * @license GNU GPL v2
+ * @package leie
+ */
 
-
+/**
+ * Class to handle sending emails
+ */
 class leieMail
 {
+    /**
+     * Sends email
+     *
+     * @return (void)
+     * @exception leieRunTimeException
+     */
     public static function send( $emailFrom, $emailToList, $subject, $content )
     {
         if ( !is_array( $emailToList ) )

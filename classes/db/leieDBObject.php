@@ -1,31 +1,56 @@
 <?php
+/**
+ * @author VaL
+ * @copyright Copyright (C) 2011 VaL::bOK
+ * @license GNU GPL v2
+ * @package leie
+ */
 
-
+/**
+ * Base database object.
+ */
 abstract class leieDBObject
 {
     /**
-     * @var
+     * Lisf of database fields
+     *
+     * @var (array)
      */
     protected $FieldList = array();
 
     /**
+     * Returns a definition of database table
      *
+     * @return (array)
      */
     public static function definition()
     {
         return array();
     }
 
+    /**
+     * @reimp
+     */
     public function __construct( array $fieldList = array() )
     {
         $this->FieldList = $fieldList;
     }
 
+    /**
+     * Checks if requested attribute exists
+     *
+     * @return (bool)
+     */
     public function hasAttribute( $name )
     {
         return isset( $this->FieldList[$name] );
     }
 
+    /**
+     * Returns attribute from definition
+     *
+     * @return (array)
+     */
     protected function getDefinitionAttribute( $name )
     {
         $definition = $this->definition();
@@ -37,12 +62,22 @@ abstract class leieDBObject
         return $definition[$name];
     }
 
+    /**
+     * Checks if definition attribute exists
+     *
+     * @return (bool)
+     */
     protected function hasDefinitionAttribute( $name )
     {
         $definition = $this->definition();
         return isset( $definition[$name] );
     }
 
+    /**
+     * Returns field value
+     *
+     * @return (string|number)
+     */
     public function getAttribute( $name )
     {
         if ( !$this->hasAttribute( $name ) )
@@ -53,6 +88,11 @@ abstract class leieDBObject
         return $this->FieldList[$name];
     }
 
+    /**
+     * Sets field value
+     *
+     * @return (void)
+     */
     public function setAttribute( $name, $value )
     {
         $this->FieldList[$name] = $value;
@@ -66,6 +106,7 @@ abstract class leieDBObject
      * @param (string)
      * @param (string)
      * @return (ezcQuerySelect)
+     * @todo Add multiple ordering
      */
     public function createSelect( $cond = false, $limit = false, $offset = false, $orderBy = false, $orderType = ezcQuerySelect::ASC )
     {
@@ -266,7 +307,6 @@ abstract class leieDBObject
         $stmt = $q->prepare();
         $stmt->execute();
     }
-
 }
 
 

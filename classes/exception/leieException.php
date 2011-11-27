@@ -1,6 +1,6 @@
 <?php
 /**
- * @author vd
+ * @author VaL
  * @copyright Copyright (C) 2011 VaL::bOK
  * @license GNU GPL v2
  * @package leie

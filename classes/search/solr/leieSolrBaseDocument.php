@@ -257,7 +257,7 @@ abstract class leieSolrBaseDocument
         }
 
         $query = new SolrQuery();
-        $query->setQuery( $field . ':"' . htmlentities( $text ) . '"' );
+        $query->setQuery( $field . ':' . htmlentities( $text ) );
 
         if ( $offset !== false )
         {
