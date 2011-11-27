@@ -84,9 +84,16 @@ class leieAccessDeniedException extends leieException
 }
 
 /**
- * ?
+ * Is used when redirect should be processed
  */
 class leieRedirectToURIException extends leieException
+{
+}
+
+/**
+ * If solr client throws an exception
+ */
+class leieSolrException extends leieException
 {
 }
 

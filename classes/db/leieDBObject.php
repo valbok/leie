@@ -67,7 +67,7 @@ abstract class leieDBObject
      * @param (string)
      * @return (ezcQuerySelect)
      */
-    public function createSelect( $cond = false, $limit = false, $offset = false, $orderBy = false )
+    public function createSelect( $cond = false, $limit = false, $offset = false, $orderBy = false, $orderType = ezcQuerySelect::ASC )
     {
         $db = ezcDbInstance::get();
 
@@ -106,7 +106,7 @@ abstract class leieDBObject
 
         if ( $orderBy )
         {
-            $q->orderBy( $orderBy );
+            $q->orderBy( $orderBy, $orderType );
         }
 
         if ( $limit !== false )
