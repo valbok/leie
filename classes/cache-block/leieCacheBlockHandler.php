@@ -68,10 +68,8 @@ abstract class leieCacheBlockHandler
      * @param (string) $params Encoded param list
      * @return (string)
      */
-    protected static function createHash( $name, $params )
+    protected static function createHash( $name, $params, $salt = 'leieBSalt' )
     {
-        $salt = 'leiebSaLt';
-
         return md5( $name . ':' . $params . ':' . $salt );
     }
 
