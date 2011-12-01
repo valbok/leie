@@ -251,6 +251,15 @@ abstract class leieSolrBaseDocument
      */
     protected static function fetchObjectList( $def, $field, $text, $filterList = array(), $limit = false, $offset = false )
     {
+        $text = preg_replace( '/[^a-zA-Z+_\-0-9 ]/', '', $text );
+        $text = htmlentities( $text );
+        $text = str_replace( '+', ' ', $text );
+
+        if ( empty( $text ) )
+        {
+            return array();
+        }
+
         if ( !$limit )
         {
             $limit = 1000;
