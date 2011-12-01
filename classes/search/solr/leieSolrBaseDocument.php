@@ -251,10 +251,8 @@ abstract class leieSolrBaseDocument
      */
     protected static function fetchObjectList( $def, $field, $text, $filterList = array(), $limit = false, $offset = false )
     {
-        $text = preg_replace( '/[^a-zA-Z+_\-0-9 ]/', '', $text );
-        $text = htmlentities( $text );
-        $text = str_replace( '+', ' ', $text );
-
+        $text = preg_replace( '/[~!@#$%^&*\(\)=\{\}\[\]:;\\\\\/\|]/', '', $text );
+        $text = htmlspecialchars( $text );
         if ( empty( $text ) )
         {
             return array();
@@ -266,7 +264,7 @@ abstract class leieSolrBaseDocument
         }
 
         $query = new SolrQuery();
-        $query->setQuery( $field . ':' . htmlentities( $text ) );
+        $query->setQuery( $field . ':' . $text );
 
         if ( $offset !== false )
         {
