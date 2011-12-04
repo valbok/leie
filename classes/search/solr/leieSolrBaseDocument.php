@@ -249,7 +249,7 @@ abstract class leieSolrBaseDocument
      *
      * @return (array)
      */
-    protected static function fetchObjectList( $def, $field, $text, $filterList = array(), $limit = false, $offset = false )
+    protected static function fetchObjectList( $def, $field, $text, $filterList = array(), $limit = false, $offset = false, array $orderByList = array() )
     {
         $text = preg_replace( '/[~!@#$%^&*\(\)=\{\}\[\]:;\\\\\/\|]/', '', $text );
         $text = htmlspecialchars( $text );
@@ -286,7 +286,11 @@ abstract class leieSolrBaseDocument
             $query->addFilterQuery( $key . ':' . $item );
         }
 
-        $query->setHighlight( true )->setHighlightSnippets( 100 );//->addSortField( 'meta_id', SolrQuery::ORDER_ASC );
+        $query->setHighlight( true )->setHighlightSnippets( 100 );
+        foreach ( $orderByList as $orderBy => $orderByType )
+        {
+            $query->addSortField( $orderBy, $orderByType );
+        }
 
         try
         {
