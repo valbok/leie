@@ -23,9 +23,10 @@ class testTableIncrement extends leieDBObject
     public static function init( $link )
     {
         mysql_query( 'DROP TABLE IF EXISTS ' . self::Table );
-        if ( !mysql_query( "CREATE TABLE " . testTableIncrement::Table . " (
+        if ( !mysql_query( "CREATE TABLE " . self::Table . " (
                             id int(11) NOT NULL auto_increment,
                             name varchar(255) default NULL,
+                            created int(11) default '0',
                             PRIMARY KEY (id)
                             ) ENGINE=InnoDB;" ) )
         {
@@ -100,8 +101,8 @@ class leieDBObjectTest extends PHPUnit_Framework_TestCase
         $link = self::connect();
         testTableIncrement::init( $link );
         mysql_select_db( self::Database );
-        mysql_query( 'INSERT INTO ' . testTableIncrement::Table . ' ( name ) VALUES ( \'TEST1\' )' );
-        mysql_query( 'INSERT INTO ' . testTableIncrement::Table . ' ( name ) VALUES ( \'TEST2\' )' );
+        mysql_query( 'INSERT INTO ' . testTableIncrement::Table . ' ( name, created ) VALUES ( \'TEST1\', 1 )' );
+        mysql_query( 'INSERT INTO ' . testTableIncrement::Table . ' ( name, created ) VALUES ( \'TEST2\', 2 )' );
 
         $l = testTableIncrement::get()->fetchObjectList();
         $this->assertArrayHasKey( '0', $l );
@@ -110,6 +111,23 @@ class leieDBObjectTest extends PHPUnit_Framework_TestCase
         $this->assertEquals( 'TEST2', $l[1]->getAttribute( 'name' ) );
     }
 
+    public function testOrderBy()
+    {
+        self::initDB();
+        $link = self::connect();
+        testTableIncrement::init( $link );
+        mysql_select_db( self::Database );
+        mysql_query( 'INSERT INTO ' . testTableIncrement::Table . ' ( name, created ) VALUES ( \'TEST1\', 1 )' );
+        mysql_query( 'INSERT INTO ' . testTableIncrement::Table . ' ( name, created ) VALUES ( \'TEST2\', 2 )' );
+
+        $o = testTableIncrement::get();
+        $q = $o->createSelect( false, false, false, array( 'name' => ezcQuerySelect::ASC, 'created' => ezcQuerySelect::ASC ) );
+        $l = testTableIncrement::get()->fetchObjectList();
+        $this->assertArrayHasKey( '0', $l );
+        $this->assertEquals( 'TEST1', $l[0]->getAttribute( 'name' ) );
+        $this->assertArrayHasKey( '1', $l );
+        $this->assertEquals( 'TEST2', $l[1]->getAttribute( 'name' ) );
+    }
 
     public function testInnerJoin()
     {
@@ -257,7 +275,6 @@ class leieDBObjectTest extends PHPUnit_Framework_TestCase
         $l = $c->fetchObjectList();
         $this->assertArrayNotHasKey( '0', $l );
     }
-
 }
 
 

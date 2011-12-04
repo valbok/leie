@@ -106,9 +106,8 @@ abstract class leieDBObject
      * @param (string)
      * @param (string)
      * @return (ezcQuerySelect)
-     * @todo Add multiple ordering
      */
-    public function createSelect( $cond = false, $limit = false, $offset = false, $orderBy = false, $orderType = ezcQuerySelect::ASC )
+    public function createSelect( $cond = false, $limit = false, $offset = false, array $orderByList = array() )
     {
         $db = ezcDbInstance::get();
 
@@ -145,9 +144,9 @@ abstract class leieDBObject
 
         }
 
-        if ( $orderBy )
+        foreach ( $orderByList as $orderBy => $orderByType )
         {
-            $q->orderBy( $orderBy, $orderType );
+            $q->orderBy( $orderBy, $orderByType );
         }
 
         if ( $limit !== false )
