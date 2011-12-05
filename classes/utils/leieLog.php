@@ -74,7 +74,7 @@ class leieLog
         }
 
         $time = date( 'M j Y H:i:s' );
-        $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : $_SERVER['HOSTNAME'];
+        $ip = isset( $_SERVER['HTTP_X_REAL_IP'] ) ? $_SERVER['HTTP_X_REAL_IP'] : ( isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : $_SERVER['HOSTNAME'] );
 
         $notice = "[ " . $time . " ] [" . $ip . ":" . session_id() . "] " . $string . "\n";
         if ( !file_put_contents( $fileName, $notice, FILE_APPEND ) )
