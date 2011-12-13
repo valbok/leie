@@ -130,7 +130,7 @@ class leieSession
         self::set( 'current_user_id', $userID );
         if ( $userID )
         {
-            setcookie( 'is_logged_in', 'true', self::$TTL, '/' );
+            setcookie( 'is_logged_in', 'true', time() + self::$TTL, '/' );
         }
         else
         {
