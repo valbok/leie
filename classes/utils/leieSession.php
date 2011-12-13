@@ -26,6 +26,13 @@ class leieSession
     static protected $HasStarted = false;
 
     /**
+     * Has session started
+     *
+     * @var (bool)
+     */
+    static protected $TTL = 0;
+
+    /**
      * Starts a session if needed
      *
      * @return (bool)
@@ -36,6 +43,8 @@ class leieSession
         {
             return false;
         }
+
+        self::$TTL = $cookieTimeout;
 
         $sessionName = session_name();
         $hasSessionCookie = isset( $_COOKIE[$sessionName] );
@@ -119,6 +128,14 @@ class leieSession
     static public function setUserID( $userID = 0 )
     {
         self::set( 'current_user_id', $userID );
+        if ( $userID )
+        {
+            setcookie( 'is_logged_in', 'true', self::$TTL, '/' );
+        }
+        else
+        {
+            setcookie( 'is_logged_in', '', time() - 3600, '/' );
+        }
     }
 
     /**
