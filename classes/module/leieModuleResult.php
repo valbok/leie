@@ -41,6 +41,20 @@ class leieModuleResult
     protected $Pagelayout = '';
 
     /**
+     * Page description
+     *
+     * @var (string)
+     */
+    public $Description = '';
+
+    /**
+     * Page tags
+     *
+     * @var (string)
+     */
+    public $Tags = '';
+
+    /**
      * @reimp
      */
     public function __construct( array $data = array() )
@@ -49,6 +63,8 @@ class leieModuleResult
         $this->Title = isset( $data['title'] ) ? $data['title'] : '';
         $this->Pagelayout = isset( $data['pagelayout'] ) ? $data['pagelayout'] : 'pagelayout.tpl';
         $this->Path = isset( $data['path'] ) ? $data['path'] : array();
+        $this->Description = isset( $data['description'] ) ? $data['description'] : false;
+        $this->Tags = isset( $data['tags'] ) ? $data['tags'] : false;
     }
 
     /**
