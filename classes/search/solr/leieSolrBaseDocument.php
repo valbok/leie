@@ -276,6 +276,14 @@ abstract class leieSolrBaseDocument
             $query->setRows( $limit );
         }
 
+        /**
+         * AND: array( 'field1' => 'value1',
+         *             'field2' => 'value2' );
+         * OR:  array( array( 'field1' => 'value1',
+         *                    'field2' => 'value2' ),
+         *             array( 'field1' => 'value3' )
+         *            );
+         */
         foreach ( $filterList as $key => $item )
         {
             if ( $item === false )
@@ -283,7 +291,26 @@ abstract class leieSolrBaseDocument
                 continue;
             }
 
-            $query->addFilterQuery( $key . ':' . $item );
+            if ( is_array( $item ) )
+            {
+                $str = '';
+                foreach ( $item as $subList )
+                {
+                    foreach ( $subList as $subKey => $subItem )
+                    {
+                        $str .= $subKey . ':' . $subItem . ' ';
+                    }
+                }
+
+                if ( $str )
+                {
+                    $query->addFilterQuery( $str );
+                }
+            }
+            else
+            {
+                $query->addFilterQuery( $key . ':' . $item );
+            }
         }
 
         $query->setHighlight( true )->setHighlightSnippets( 100 );
