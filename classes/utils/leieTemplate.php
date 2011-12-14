@@ -73,9 +73,11 @@ class leieTemplate
             throw new leieRunTimeException( "Template '$tpl' does not exist" );
         }
 
-        foreach ( $this->VarList as $name => $value )
+        // @todo: Fix var names. It is due to if $_leie_template_var_name_100500 is passed as a variable
+        // it will be overrided by this foreach
+        foreach ( $this->VarList as $_leie_template_var_name_100500 => $_leie_template_var_value_100500 )
         {
-            $$name = $value;
+            $$_leie_template_var_name_100500 = $_leie_template_var_value_100500;
         }
 
         ob_start();
