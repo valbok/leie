@@ -76,7 +76,7 @@ class leieLog
         $time = date( 'M j Y H:i:s' );
         $ip = self::getCurrentIP();
 
-        $notice = "[ " . $time . " ] [" . $ip . ":" . session_id() . "] " . $string . "\n";
+        $notice = "[ " . $time . " ] [" . $_SERVER['REQUEST_URI'] . "] [" . $ip . ":" . session_id() . "] " . $string . "\n";
         if ( !file_put_contents( $fileName, $notice, FILE_APPEND ) )
         {
             return false;
