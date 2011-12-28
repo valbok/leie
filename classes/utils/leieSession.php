@@ -171,7 +171,7 @@ class leieSession
      * @param null|mixed $defaultValue Return this if not null and session has not started
      * @return mixed|null $defaultValue if key does not exist, otherwise session value depending on $key
      */
-    static public function &get( $key = null, $defaultValue = null )
+    public static function &get( $key = null, $defaultValue = null )
     {
         if ( self::$HasStarted === false )
         {
