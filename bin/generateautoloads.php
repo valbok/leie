@@ -11,7 +11,7 @@
  * @todo Clean up the code
  */
 
-require 'Base/src/base.php';
+require 'Base/base.php';
 
 /**
  * Autoload ezc classes

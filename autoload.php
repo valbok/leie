@@ -10,7 +10,7 @@
  * @todo Fix hardcode var/autoload.php
  */
 
-require 'Base/src/base.php';
+require 'Base/base.php';
 $baseEnabled = true;
 
 /**
