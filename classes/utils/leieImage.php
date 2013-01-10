@@ -7,12 +7,22 @@
  */
 
 /**
+ * PROTOTYPE
+ *
  * Class to handle images
  */
 class leieImage
 {
 
+    /**
+     * @var (string)
+     */
     protected $Path = '';
+
+    /**
+     * @var (ezcImageAnalyzer)
+     */
+    protected $Analyzer = false;
 
     /**
      * @param (string) $dir Where templates are located
@@ -32,8 +42,16 @@ class leieImage
         return new self( $path );
     }
 
+    /**
+     *
+     */
     public function analyze()
     {
+        if ( $this->Analyzer )
+        {
+            return $this->Analyzer;
+        }
+
         try
         {
             $image = new ezcImageAnalyzer( $this->Path );
@@ -43,6 +61,7 @@ class leieImage
             throw new leieInvalidArgumentException( $e->getMessage() );
         }
 
+        $this->Analyzer = $image;
         return $image;
     }
 
@@ -218,6 +237,22 @@ class leieImage
         }
 
         return $result;
+    }
+
+    /**
+     * @return (string)
+     */
+    public function getWidth()
+    {
+        return $this->analyze()->data->width;
+    }
+
+    /**
+     * @return (string)
+     */
+    public function getHeight()
+    {
+        return $this->analyze()->data->height;
     }
 }
 ?>
