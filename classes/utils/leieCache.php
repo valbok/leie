@@ -256,7 +256,7 @@ class leieCache
     }
 
     /**
-     * Clears all nxc cache
+     * Clears all leie cache
      *
      * @return (void)
      */
