@@ -100,5 +100,30 @@ class leieTemplate
 
         echo $tpl->fetch( $uri );
     }
+
+    /**
+     * Washes the content
+     *
+     * @return (string)
+     */
+    public static function wash( $content, $type = 'xhtml' )
+    {
+        switch ( $type )
+        {
+            default:
+            case "xhtml":
+            {
+                $result = htmlspecialchars( $content );
+            } break;
+
+            case 'javascript':
+            {
+                $result = str_replace( array( "\\", "\"", "'"),
+                                              array( "\\\\", "\\042", "\\047" ) , $content );
+            } break;
+        }
+
+        return $result;
+    }
 }
 ?>
