@@ -8,7 +8,7 @@
  */
 
 /**
- * Object to handle templates
+ * Simplified object to handle templates
  */
 class leieTemplate
 {
@@ -65,7 +65,7 @@ class leieTemplate
      *
      * @return (string)
      */
-    public function fetch( $filename )
+    public function fetch( $filename, $ttl = false )
     {
         $tpl = $this->Dir . '/' . $filename;
         if ( !file_exists( $tpl ) )
@@ -111,7 +111,7 @@ class leieTemplate
         switch ( $type )
         {
             default:
-            case "xhtml":
+            case 'xhtml':
             {
                 $result = htmlspecialchars( $content );
             } break;
@@ -119,7 +119,7 @@ class leieTemplate
             case 'javascript':
             {
                 $result = str_replace( array( "\\", "\"", "'"),
-                                              array( "\\\\", "\\042", "\\047" ) , $content );
+                                       array( "\\\\", "\\042", "\\047" ) , $content );
             } break;
         }
 
