@@ -1,7 +1,6 @@
 <?php
 /**
  * @author VaL
- * @file leieTemplate.php
  * @copyright Copyright (C) 2011 VaL::bOK
  * @license GNU GPL v2
  * @package leie
@@ -13,9 +12,21 @@
 class leieTemplate
 {
     /**
-     * Submitted variable list
+     * @var (array)
+     */
+    protected static $InstanceList = array();
+
+    /**
+     * Dir where tpls are located
      *
      * @var (string)
+     */
+    protected $Dir = '';
+
+    /**
+     * Submitted variable list
+     *
+     * @var (array)
      */
     protected $VarList = array();
 
@@ -28,13 +39,64 @@ class leieTemplate
     }
 
     /**
+     * @return (void)
+     */
+    protected static function setInstance( leieTemplate $o )
+    {
+        self::$InstanceList[$o->Dir] = $o;
+    }
+
+    /**
+     * @return (void)
+     */
+    protected static function setDefaultInstance( leieTemplate $o )
+    {
+        self::$InstanceList['default'] = $o;
+    }
+
+    /**
+     * @return (__CLASS__)
+     */
+    protected static function getDefaultInstance()
+    {
+        return isset( self::$InstanceList['default'] ) ? self::$InstanceList['default'] : false;
+    }
+
+    /**
+     * @return (__CLASS__)
+     */
+    protected static function getInstance( $dir = false )
+    {
+        //var_dump(self::$InstanceList);
+        return $dir === false ? self::getDefaultInstance() : ( isset( self::$InstanceList[$dir] ) ? self::$InstanceList[$dir] : false );
+    }
+
+    /**
      * Wrapper to create the object
      *
      * @return (__CLASS__)
      */
     public static function get( $dir = false )
     {
+        $o = self::getInstance( $dir );
+        if ( $o )
+        {
+            return $o;
+        }
+
         return $dir ? new self( $dir ) : new self();
+    }
+
+    /**
+     * Sets singelton
+     *
+     * @return (this)
+     */
+    public function setDefault()
+    {
+        self::setDefaultInstance( $this );
+
+        return $this;
     }
 
     /**
@@ -92,7 +154,7 @@ class leieTemplate
      */
     public static function includeTemplate( $uri, $data = array() )
     {
-        $tpl = new self();
+        $tpl = self::get();
         foreach ( $data as $key => $value )
         {
             $tpl->setVariable( $key, $value );

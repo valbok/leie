@@ -20,7 +20,7 @@ class leieIncludeCacheBlock extends leieCacheBlock
      */
     public function process()
     {
-        $tpl = new leieTemplate();
+        $tpl = leieTemplate::get();
         foreach ( $this->getVariableList() as $key => $value )
         {
             $tpl->setVariable( $key, $value );

@@ -74,7 +74,7 @@ class leieModuleResult
      */
     public function handle()
     {
-        $tpl = new leieTemplate();
+        $tpl = leieTemplate::get();
         $tpl->setVariable( 'module_result', $this );
 
         return $tpl->fetch( $this->Pagelayout );
