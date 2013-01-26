@@ -22,7 +22,7 @@ class leieLog
      * @param (string)
      * @param (string)
      */
-    public function __conscruct( $errorFile = false, $debugFile = false, $noticeFile = false )
+    public function __construct( $errorFile = false, $debugFile = false, $noticeFile = false )
     {
         self::$ErrorFile = $errorFile ? $errorFile : 'var/log/error.log';
         self::$DebugFile = $debugFile ? $debugFile : 'var/log/debug.log';
