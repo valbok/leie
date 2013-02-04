@@ -150,8 +150,8 @@ class leieImage
         $info = pathinfo( $this->Path );
         $dir = $info['dirname'];
         $filename = $info['filename'] . '_' . $name;
-        $ext = $info['extension'];
-        $result = $dir . '/' .  $filename . '.' . $ext;
+        $ext = isset( $info['extension'] ) ? '.' . $info['extension'] : '';
+        $result = $dir . '/' .  $filename . $ext;
 
         return $result;
     }
@@ -220,8 +220,8 @@ class leieImage
         $info = pathinfo( $this->Path );
         $dir = $info['dirname'];
         $filename = $info['filename'] . '_' . $name;
-        $ext = $info['extension'];
-        $result = $dir . '/' .  $filename . '.' . $ext;
+        $ext = isset( $info['extension'] ) ? '.' . $info['extension'] : '';
+        $result = $dir . '/' .  $filename . $ext;
 
         try
         {
