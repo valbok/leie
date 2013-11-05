@@ -221,7 +221,7 @@ class leieImage
     }
 
     /**
-     * @return string
+     * @return bigint
      */
     public function getAverageHash()
     {
@@ -236,14 +236,14 @@ class leieImage
             }
         }
 
-        // Inteher val exceeded PHP_MAX_INT
+        // Integer val exceeded PHP_MAX_INT so need to use external library
         $a = gmp_init( '0x' . dechex( bindec( $result ) ) );
 
         return gmp_strval( $a );
     }
 
     /**
-     * @return string
+     * @return bigint
      */
     public function getDifferenceHash()
     {
@@ -268,7 +268,8 @@ class leieImage
             }
         }
 
-        $a = gmp_init( '0x'.dechex( bindec( $result ) ) );
+        // Integer val exceeded PHP_MAX_INT so need to use external library
+        $a = gmp_init( '0x' . dechex( bindec( $result ) ) );
 
         return gmp_strval( $a );
     }
