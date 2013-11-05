@@ -302,7 +302,7 @@ class leieImage
         $w = $this->getWidth();
         $h = $this->getHeight();
 
-        $result = $c = 0;
+        $result = 0;
         for ( $y = 0; $y < $h; $y++ )
         {
             for ( $x = 0; $x < $w; $x++ )
