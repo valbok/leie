@@ -5,6 +5,7 @@
  * @license GNU GPL v2
  * @package leie::image
  * @version 1.0Beta
+ * @uses imagemagick, ezcomponents, GMP for bigint hashes
  */
 
 /**
