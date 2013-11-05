@@ -1,31 +1,29 @@
 <?php
 /**
  * @author VaL
- * @copyright Copyright (C) 2011 VaL::bOK
+ * @copyright Copyright (C) 2013 VaL::bOK
  * @license GNU GPL v2
- * @package leie
+ * @package leie::image
+ * @version 1.0Beta
  */
 
 /**
- * PROTOTYPE
- *
  * Class to handle images
  */
 class leieImage
 {
-
     /**
-     * @var (string)
+     * @var string
      */
     protected $Path = '';
 
     /**
-     * @var (ezcImageAnalyzer)
+     * @var ezcImageAnalyzer
      */
     protected $Analyzer = false;
 
     /**
-     * @param (string) $dir Where templates are located
+     * @param string
      */
     public function __construct( $path )
     {
@@ -37,15 +35,27 @@ class leieImage
         $this->Path = $path;
     }
 
+    /**
+     * @param string
+     **/
     public static function get( $path )
     {
         return new self( $path );
     }
 
     /**
-     *
+     * @return string
      */
-    public function analyze()
+    public function getPath()
+    {
+        return $this->Path;
+    }
+
+    /**
+     * @return ezcImageAnalyzer
+     * @throws leieInvalidArgumentException
+     */
+    public function getAnalyzer()
     {
         if ( $this->Analyzer )
         {
@@ -65,87 +75,28 @@ class leieImage
         return $image;
     }
 
-    public function getFilterList()
-    {
-        static $result = false;
-        if ( $result )
-        {
-            return $result;
-        }
-
-        $result = array(
-
-            'filledThumbnail' =>
-                new ezcImageFilter(
-                    'filledThumbnail',
-                    array(
-                        'width'  => 100,
-                        'height' => 100,
-                        'color'  => array(
-                            200,
-                            200,
-                            200,
-                        ),
-                    )
-                ),
-            'scale'=>
-                new ezcImageFilter(
-                    'scale',
-                    array(
-                        'width'     => 320,
-                        'height'    => 240,
-                        'direction' => ezcImageGeometryFilters::SCALE_DOWN,
-                    )
-                ),
-            'colorspace' =>
-                new ezcImageFilter(
-                    'colorspace',
-                    array(
-                        'space' => ezcImageColorspaceFilters::COLORSPACE_GREY,
-                    )
-                ),
-            'border'=>
-                new ezcImageFilter(
-                    'border',
-                    array(
-                        'width' => 5,
-                        'color' => array( 240, 240, 240 ),
-                    )
-                ),
-        );
-
-        return $result;
-    }
-
+    /**
+     * @return ezcImageConverter
+     */
     public static function getConverter()
     {
-        static $converter = false;
-        if ( $converter )
-        {
-            return $converter;
-        }
-
         $settings = new ezcImageConverterSettings(
             array(
                 //new ezcImageHandlerSettings( 'GD',          'ezcImageGdHandler' ),
                 new ezcImageHandlerSettings( 'ImageMagick', 'ezcImageImagemagickHandler' ),
             )
-            /*, array(
-                'image/gif' => 'image/png',
-            )*/
         );
 
-        $converter = new ezcImageConverter( $settings );
-        return $converter;
+        return new ezcImageConverter( $settings );
     }
 
     /**
      * Returns transformation path
      *
-     * @param (string)
-     * @return (string)
+     * @param string
+     * @return string Path to transformed image
      */
-    public function getTransformationPath( $name )
+    protected function getTransformationPath( $name )
     {
         $info = pathinfo( $this->Path );
         $dir = $info['dirname'];
@@ -157,21 +108,45 @@ class leieImage
     }
 
     /**
-     * Scales the image
-     *
-     * @param (int)
-     * @param (int)
-     * @return (string) Path to scalled image
+     * @param int
+     * @param int
+     * @return __CLASS__
      */
-    public function scale( $width, $height )
+    protected function transform( $filters = array(), $path = false )
     {
-        $path = $this->getTransformationPath( $width . '_' . $height );
+        $name = md5( serialize( $filters ) );
+        $path = !$path ? $this->getTransformationPath( $name ) : $path;
         if ( file_exists( $path ) )
         {
-            return $path;
+            return new self( $path );
         }
 
-        $converter = self::getConverter();
+        $mt = array( 'image/jpeg', 'image/png' );
+
+        try
+        {
+            self::getConverter()
+                ->createTransformation( $name, $filters, $mt )
+                ->transform( $this->Path, $path );
+        }
+        catch ( ezcBaseException $e )
+        {
+            throw new leieInvalidArgumentException( $e->getMessage() );
+        }
+
+        return new self( $path );
+    }
+
+    /**
+     * Scales the image and keeping proportions
+     *
+     * @param int
+     * @param int
+     * @param string
+     * @return __CLASS__
+     */
+    public function scale( $width, $height, $path = false )
+    {
         $filter = new ezcImageFilter(
                     'scale',
                     array(
@@ -181,78 +156,160 @@ class leieImage
                     )
                 );
 
-        $converter->createTransformation( 'scale', array( $filter ), array( 'image/jpeg', 'image/png' ) );
-
-        try
-        {
-            $converter->transform( 'scale', $this->Path, $path );
-        }
-        catch ( ezcImageTransformationException $e )
-        {
-            throw new leieInvalidArgumentException( $e->getMessage() );
-        }
-
-        return $path;
-    }
-
-    public function transform( $name, $filterList = array() )
-    {
-        if ( !is_array( $filterList ) )
-        {
-            $filterList = array( $filterList );
-        }
-
-        $converter = self::getConverter();
-        $fullFilterList = self::getFilterList();
-        $filters = array();
-        foreach ( $filterList as $item )
-        {
-            if ( !isset( $fullFilterList[$item] ) )
-            {
-                throw new leieRunTimeException( 'Wrong filter' );
-            }
-
-            $filters[] = $fullFilterList[$item];
-        }
-
-        $converter->createTransformation( $name, $filters, array( 'image/jpeg', 'image/png' ) );
-
-        $info = pathinfo( $this->Path );
-        $dir = $info['dirname'];
-        $filename = $info['filename'] . '_' . $name;
-        $ext = isset( $info['extension'] ) ? '.' . $info['extension'] : '';
-        $result = $dir . '/' .  $filename . $ext;
-
-        try
-        {
-            $converter->transform(
-                $name,
-                $this->Path,
-                $result
-            );
-        }
-        catch ( ezcImageTransformationException $e)
-        {
-            throw new leieInvalidArgumentException( $e->getMessage() );
-        }
-
-        return $result;
+        return $this->transform( array( $filter ), $path );
     }
 
     /**
-     * @return (string)
+     * Scales the image
+     *
+     * @param int
+     * @param int
+     * @return string Path to scalled image
+     */
+    public function resize( $width, $height, $path = false )
+    {
+        $filter = new ezcImageFilter(
+                    'scaleExact',
+                    array(
+                        'height' => $height,
+                        'width' => $width,
+                    )
+                );
+
+        return $this->transform( array( $filter ), $path );
+    }
+
+    /**
+     * @param string
+     * @return __CLASS__
+     */
+    public function convertToGrayscale( $path = false )
+    {
+        $filter = new ezcImageFilter(
+                        'colorspace',
+                        array(
+                            'space' => ezcImageColorspaceFilters::COLORSPACE_GREY,
+                        )
+                );
+
+        return $this->transform( array( $filter ), $path );
+    }
+
+    /**
+     * @return string
      */
     public function getWidth()
     {
-        return $this->analyze()->data->width;
+        return $this->getAnalyzer()->data->width;
     }
 
     /**
-     * @return (string)
+     * @return string
      */
     public function getHeight()
     {
-        return $this->analyze()->data->height;
+        return $this->getAnalyzer()->data->height;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMime()
+    {
+        return $this->getAnalyzer()->mime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAverageHash()
+    {
+        $i = $this->convertToGrayscale()->resize( 8, 8 );
+        $averageValue = $i->getAveragePixelValue();
+        $result = "";
+        for ( $y = 0; $y < 8; $y++ )
+        {
+            for ( $x = 0; $x < 8; $x++ )
+            {
+                $result .= ( $i->getPixel( $x, $y ) >= $averageValue ) ? "1" : "0";
+            }
+        }
+
+        // Inteher val exceeded PHP_MAX_INT
+        $a = gmp_init( '0x' . dechex( bindec( $result ) ) );
+
+        return gmp_strval( $a );
+    }
+
+    /**
+     * @return string
+     */
+    public function getDifferenceHash()
+    {
+        $i = $this->convertToGrayscale()->resize( 8, 8 );
+        $previousPixel = $i->getPixel( 7, 7 );
+        $result = "";
+        for ( $y = 0; $y < 8; $y = $y + 2 )
+        {
+            for ( $x = 0; $x < 8; $x++ )
+            {
+                $pixel = $i->getPixel( $x, $y );
+                $result .= ( $pixel >= $previousPixel ) ? "1" : "0";
+                $previousPixel = $pixel;
+            }
+
+            $y += 1;
+            for ( $x = 7; $x >= 0; $x-- )
+            {
+                $pixel = $i->getPixel( $x, $y );
+                $result .= ( $pixel >= $previousPixel ) ? "1" : "0";
+                $previousPixel = $pixel;
+            }
+        }
+
+        $a = gmp_init( '0x'.dechex( bindec( $result ) ) );
+
+        return gmp_strval( $a );
+    }
+
+    /**
+     * @return [r,g,b]
+     */
+    public function getPixelColor( $x, $y )
+    {
+        $im = new Imagick( $this->Path );
+
+        return $im->getImagePixelColor( $x, $y )->getColor();
+    }
+
+    /**
+     * @return double
+     */
+    protected function getPixel( $x, $y )
+    {
+        $rgb = $this->getPixelColor( $x, $y );
+
+        return ( $rgb['r'] + $rgb['g'] + $rgb['b'] ) / 3;
+    }
+
+    /**
+     * @return double
+     */
+    public function getAveragePixelValue()
+    {
+        $w = $this->getWidth();
+        $h = $this->getHeight();
+
+        $result = $c = 0;
+        for ( $y = 0; $y < $h; $y++ )
+        {
+            for ( $x = 0; $x < $w; $x++ )
+            {
+                $result += $this->getPixel( $x, $y );
+            }
+        }
+
+        return $result / ( $w * $h );
     }
 }
 ?>

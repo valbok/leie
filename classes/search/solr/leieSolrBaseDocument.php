@@ -186,7 +186,7 @@ abstract class leieSolrBaseDocument
      */
     public function delete()
     {
-        self::removeByID( $this->attribute( 'id' ) );
+        self::deleteByID( $this->getAttribute( 'id' ) );
     }
 
     /**

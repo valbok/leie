@@ -14,14 +14,14 @@ abstract class leieDBObject
     /**
      * Lisf of database fields
      *
-     * @var (array)
+     * @var []
      */
     protected $FieldList = array();
 
     /**
      * Returns a definition of database table
      *
-     * @return (array)
+     * @return []
      */
     public static function definition()
     {
@@ -39,7 +39,7 @@ abstract class leieDBObject
     /**
      * Checks if requested attribute exists
      *
-     * @return (bool)
+     * @return bool
      */
     public function hasAttribute( $name )
     {
@@ -49,7 +49,7 @@ abstract class leieDBObject
     /**
      * Returns attribute from definition
      *
-     * @return (array)
+     * @return []
      */
     protected function getDefinitionAttribute( $name )
     {
@@ -65,7 +65,7 @@ abstract class leieDBObject
     /**
      * Checks if definition attribute exists
      *
-     * @return (bool)
+     * @return bool
      */
     protected function hasDefinitionAttribute( $name )
     {
@@ -76,7 +76,7 @@ abstract class leieDBObject
     /**
      * Returns field value
      *
-     * @return (string|number)
+     * @return string|number
      */
     public function getAttribute( $name )
     {
@@ -91,21 +91,23 @@ abstract class leieDBObject
     /**
      * Sets field value
      *
-     * @return (void)
+     * @return $this
      */
     public function setAttribute( $name, $value )
     {
         $this->FieldList[$name] = $value;
+
+        return $this;
     }
 
     /**
      * Creates select query object to fetch the data
      *
-     * @param (array|string) $cond Conditions
-     * @param (string)
-     * @param (string)
-     * @param (string)
-     * @return (ezcQuerySelect)
+     * @param array|string $cond Conditions
+     * @param string
+     * @param string
+     * @param string
+     * @return ezcQuerySelect
      */
     public function createSelect( $cond = false, $limit = false, $offset = false, array $orderByList = array() )
     {
@@ -161,8 +163,8 @@ abstract class leieDBObject
     /**
      * Fetches object list from database
      *
-     * @param (ezcQuerySelect) $q Query
-     * @return (array)
+     * @param ezcQuerySelect $q Query
+     * @return array
      */
     public function fetchObjectList( $q = false )
     {
@@ -190,9 +192,9 @@ abstract class leieDBObject
     /**
      * Fetches the object from database
      *
-     * @param (array|string) $cond
+     * @param array|string $cond
      *
-     * @return (__CLASS__)
+     * @return __CLASS__
      */
     public function fetchObject( $cond )
     {
@@ -204,29 +206,33 @@ abstract class leieDBObject
     /**
      * Begins a transaction
      *
-     * @return (void)
+     * @return $this
      */
     public static function begin()
     {
         $db = ezcDbInstance::get();
         $db->beginTransaction();
+
+        return $this;
     }
 
     /**
      * Commits a transaction
      *
-     * @return (void)
+     * @return $this
      */
     public static function commit()
     {
         $db = ezcDbInstance::get();
         $db->commit();
+
+        return $this;
     }
 
     /**
      * Updates current object
      *
-     * @return (void)
+     * @return $this
      */
     public function update()
     {
@@ -243,12 +249,14 @@ abstract class leieDBObject
 
         $stmt = $q->prepare();
         $stmt->execute();
+
+        return $this;
     }
 
     /**
      * Inserts current object to database
      *
-     * @return (void)
+     * @return int
      */
     public function insert()
     {
@@ -272,7 +280,7 @@ abstract class leieDBObject
     /**
      * Sets field list to a query
      *
-     * @return (void)
+     * @return void
      */
     protected function setQueryFields( $q )
     {
@@ -290,7 +298,7 @@ abstract class leieDBObject
     /**
      * Removes current object from database
      *
-     * @return (void)
+     * @return $this;
      */
     public function delete()
     {
@@ -305,6 +313,8 @@ abstract class leieDBObject
 
         $stmt = $q->prepare();
         $stmt->execute();
+
+        return $this;
     }
 }
 
