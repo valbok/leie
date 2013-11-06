@@ -95,7 +95,6 @@ class leieImageTest extends PHPUnit_Framework_TestCase
         $h = @leieImage::get( dirname( __FILE__ ) . '/img/1.gif' )->getDifferenceHash();
 	//var_dump($h);
     }
-
 }
 
 

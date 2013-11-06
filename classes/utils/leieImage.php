@@ -5,7 +5,7 @@
  * @license GNU GPL v2
  * @package leie::image
  * @version 1.0Beta
- * @uses imagemagick, ezcomponents, GMP for bigint hashes
+ * @uses imagemagick, ezcomponents
  */
 
 /**
@@ -101,7 +101,7 @@ class leieImage
     {
         $info = pathinfo( $this->Path );
         $dir = $info['dirname'];
-        $filename = $info['filename'] . '_' . $name;
+        $filename = $info['filename'] . '_transformed_' . $name;
         $ext = isset( $info['extension'] ) ? '.' . $info['extension'] : '';
         $result = $dir . '/' .  $filename . $ext;
 
@@ -109,8 +109,8 @@ class leieImage
     }
 
     /**
-     * @param int
-     * @param int
+     * @param [] How to transform
+     * @param string To store transformed file to
      * @return __CLASS__
      */
     protected function transform( $filters = array(), $path = false )
@@ -221,7 +221,7 @@ class leieImage
     }
 
     /**
-     * @return bigint
+     * @return string 16 bytes hex
      */
     public function getAverageHash()
     {
@@ -236,14 +236,51 @@ class leieImage
             }
         }
 
-        // Integer val exceeded PHP_MAX_INT so need to use external library
-        $a = gmp_init( '0x' . dechex( bindec( $result ) ) );
+        $hex = self::bin2hex( $result );
+        $len = strlen( $hex );
+        if ( $len < 16 )
+        {
+            $hex = str_repeat( '0', 16 - $len ) . $hex;
+        }
 
-        return gmp_strval( $a );
+        return $hex;
     }
 
     /**
-     * @return bigint
+     * dechex( bindec( "1111111111110000111000001110000011000000111010001111100011110000" ) )
+     * sometimes returns not actual value looks like because of converting to double
+     *
+     * @param string binary
+     * @return string hex
+     */
+    public static function bin2hex( $data )
+    {
+        $result = '';
+        $len = strlen( $data );
+        $s = '';
+        $li = 0;
+        for ( $i = $len - 1; $i >= 0; $i-- )
+        {
+            $li++;
+            $s = $data[$i] . $s;
+            if ( $li >= 4 )
+            {
+                $result = dechex( bindec( $s ) ) . $result;
+                $li = 0;
+                $s = '';
+            }
+        }
+
+        if ( $s )
+        {
+            $result = dechex( bindec( $s ) ) . $result;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return string 16 bytes hex
      */
     public function getDifferenceHash()
     {
@@ -268,10 +305,14 @@ class leieImage
             }
         }
 
-        // Integer val exceeded PHP_MAX_INT so need to use external library
-        $a = gmp_init( '0x' . dechex( bindec( $result ) ) );
+        $hex = self::bin2hex( $result );
+        $len = strlen( $hex );
+        if ( $len < 16 )
+        {
+            $hex = str_repeat( '0', 16 - $len ) . $hex;
+        }
 
-        return gmp_strval( $a );
+        return $hex;
     }
 
     /**
@@ -299,6 +340,7 @@ class leieImage
      */
     public function getAveragePixelValue()
     {
+        if( $this->getMime() =='image/gif' ) return 0;
         $w = $this->getWidth();
         $h = $this->getHeight();
 
