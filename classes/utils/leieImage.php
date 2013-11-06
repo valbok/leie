@@ -101,7 +101,7 @@ class leieImage
     {
         $info = pathinfo( $this->Path );
         $dir = $info['dirname'];
-        $filename = $info['filename'] . '_transformed_' . $name;
+        $filename = $info['filename'] . '-' . $name;
         $ext = isset( $info['extension'] ) ? '.' . $info['extension'] : '';
         $result = $dir . '/' .  $filename . $ext;
 
@@ -225,7 +225,7 @@ class leieImage
      */
     public function getAverageHash()
     {
-        $i = $this->convertToGrayscale()->resize( 8, 8 );
+        $i = $this->resize( 8, 8 )->convertToGrayscale();
         $averageValue = $i->getAveragePixelValue();
         $result = "";
         for ( $y = 0; $y < 8; $y++ )
@@ -284,7 +284,7 @@ class leieImage
      */
     public function getDifferenceHash()
     {
-        $i = $this->convertToGrayscale()->resize( 8, 8 );
+        $i = $this->resize( 8, 8 )->convertToGrayscale();
         $previousPixel = $i->getPixel( 7, 7 );
         $result = "";
         for ( $y = 0; $y < 8; $y = $y + 2 )
@@ -340,7 +340,7 @@ class leieImage
      */
     public function getAveragePixelValue()
     {
-        if( $this->getMime() =='image/gif' ) return 0;
+        if ( $this->getMime() =='image/gif' ) return 0;
         $w = $this->getWidth();
         $h = $this->getHeight();
 
@@ -354,6 +354,158 @@ class leieImage
         }
 
         return $result / ( $w * $h );
+    }
+
+    /**
+     * @param string HEX
+     * @param string HEX
+     * @return int
+     * @todo check how it works on 64 bits
+     */
+    public static function getHammingDistance( $hash1, $hash2 )
+    {
+        return self::getPopCount( hexdec( $hash1 ) ^ hexdec( $hash2 ) );
+    }
+
+    /**
+     * @return int
+     */
+    public static function getPopCount( $value )
+    {
+        $result = 0;
+        while( $value )
+        {
+            $result += ($value & 1);
+            $value = $value >> 1;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return []
+     * @copyright http://stackoverflow.com/questions/14106984/how-to-calculate-discrete-cosine-transform-dct-in-php
+     */
+    protected static function calculateDCT( $in )
+    {
+        $results = array();
+        $N = count( $in );
+        for ( $k = 0; $k < $N; $k++ )
+        {
+            $sum = 0;
+            for ( $n = 0; $n < $N; $n++ )
+            {
+                 $sum += $in[$n] * cos( $k * pi() * ( $n + 0.5 ) / ( $N ) );
+            }
+
+            $sum *= sqrt( 2 / $N );
+            if ( $k == 0 )
+            {
+                $sum *= 1 / sqrt( 2 );
+            }
+
+            $results[$k] = $sum;
+        }
+        
+        return $results;
+    }
+
+    /**
+     * @return []
+     * @copyright http://stackoverflow.com/questions/14106984/how-to-calculate-discrete-cosine-transform-dct-in-php
+     */
+    public function getDCT()
+    {
+        $result = array();
+        $rows = array();
+        $row = array();
+
+        $width = $this->getWidth();
+        $height = $this->getHeight();
+
+        for ( $j = 0; $j < $height; $j++ )
+        {
+            for ( $i = 0; $i < $width; $i++ )
+            {
+                $row[$i] = $this->getPixel( $i, $j );
+            }
+
+            $rows[$j] = self::calculateDCT( $row );
+        }
+
+        for ( $i = 0; $i < $width; $i++ )
+        {
+            for ( $j = 0; $j < $height; $j++ )
+            {
+                $col[$j] = $rows[$j][$i];
+            }
+
+            $result[$i] = self::calculateDCT( $col );
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return []
+     */
+    protected static function cropArray( $array, $offset1, $offset2, $length1, $length2 )
+    {
+        $result = array();
+        foreach ( array_slice( $array, $offset1, $length1 ) as $item )
+        {
+            $result[] = array_slice( $item, $offset2, $length2 );
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return double
+     */
+    protected static function getAverageValueInArray( $array )
+    {
+        $h = count( $array );
+        $result = 0;
+        $c = 0;
+        foreach ( $array as $item )
+        {
+            foreach ( $item as $x )
+            {
+                $c++;
+                $result += $x;
+            }
+        }
+
+        return $result / $c;
+    }
+
+    /**
+     * @return string HEX
+     */
+    public function getPerceptualHash()
+    {
+        $i = $this->resize( 32, 32 )->convertToGrayscale();
+        $dct = self::cropArray( $i->getDCT(), 0, 0, 8, 8 );
+        $median = self::getAverageValueInArray( $dct );
+
+        $result = "";
+        for ( $y = 0; $y < 8; $y++ )
+        {
+            for ( $x = 0; $x < 8; $x++ )
+            {
+                $result .= ( $dct[$y][$x] > $median ) ? "1" : "0";
+            }
+        }
+
+        $hex = self::bin2hex( $result );
+        $len = strlen( $hex );
+        if ( $len < 16 )
+        {
+            $hex = str_repeat( '0', 16 - $len ) . $hex;
+        }
+
+        return $hex;
     }
 }
 ?>
