@@ -406,7 +406,7 @@ class leieImage
 
             $results[$k] = $sum;
         }
-        
+
         return $results;
     }
 
@@ -463,17 +463,21 @@ class leieImage
     /**
      * @return double
      */
-    protected static function getAverageValueInArray( $array )
+    protected static function getAverageDCTValue( $array )
     {
-        $h = count( $array );
         $result = 0;
         $c = 0;
-        foreach ( $array as $item )
+        foreach ( $array as $y => $iy )
         {
-            foreach ( $item as $x )
+            foreach ( $iy as $x => $ix )
             {
+                if ( $x == 0 and $y == 0 )
+                {
+                    continue;
+                }
+
                 $c++;
-                $result += $x;
+                $result += $ix;
             }
         }
 
@@ -487,7 +491,7 @@ class leieImage
     {
         $i = $this->resize( 32, 32 )->convertToGrayscale();
         $dct = self::cropArray( $i->getDCT(), 0, 0, 8, 8 );
-        $median = self::getAverageValueInArray( $dct );
+        $median = self::getAverageDCTValue( $dct );
 
         $result = "";
         for ( $y = 0; $y < 8; $y++ )
