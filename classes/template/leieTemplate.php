@@ -3,7 +3,7 @@
  * @author VaL
  * @copyright Copyright (C) 2011 VaL::bOK
  * @license GNU GPL v2
- * @package leie
+ * @package leie::template
  */
 
 /**
@@ -12,26 +12,26 @@
 class leieTemplate
 {
     /**
-     * @var (array)
+     * @var array
      */
     protected static $InstanceList = array();
 
     /**
      * Dir where tpls are located
      *
-     * @var (string)
+     * @var string
      */
     protected $Dir = '';
 
     /**
      * Submitted variable list
      *
-     * @var (array)
+     * @var array
      */
     protected $VarList = array();
 
     /**
-     * @param (string) $dir Where templates are located
+     * @param string $dir Where templates are located
      */
     public function __construct( $dir = 'design/templates' )
     {
@@ -39,7 +39,7 @@ class leieTemplate
     }
 
     /**
-     * @return (void)
+     * @return void
      */
     protected static function setInstance( leieTemplate $o )
     {
@@ -47,7 +47,7 @@ class leieTemplate
     }
 
     /**
-     * @return (void)
+     * @return void
      */
     protected static function setDefaultInstance( leieTemplate $o )
     {
@@ -55,7 +55,7 @@ class leieTemplate
     }
 
     /**
-     * @return (__CLASS__)
+     * @return __CLASS__
      */
     protected static function getDefaultInstance()
     {
@@ -63,18 +63,17 @@ class leieTemplate
     }
 
     /**
-     * @return (__CLASS__)
+     * @return __CLASS__
      */
     protected static function getInstance( $dir = false )
     {
-        //var_dump(self::$InstanceList);
         return $dir === false ? self::getDefaultInstance() : ( isset( self::$InstanceList[$dir] ) ? self::$InstanceList[$dir] : false );
     }
 
     /**
      * Wrapper to create the object
      *
-     * @return (__CLASS__)
+     * @return __CLASS__
      */
     public static function get( $dir = false )
     {
@@ -90,7 +89,7 @@ class leieTemplate
     /**
      * Sets singelton
      *
-     * @return (this)
+     * @return this
      */
     public function setDefault()
     {
@@ -102,9 +101,9 @@ class leieTemplate
     /**
      * Sets a var
      *
-     * @param (string)
-     * @param (mixed)
-     * @return (void)
+     * @param string
+     * @param mixed
+     * @return void
      */
     public function setVariable( $name, $value )
     {
@@ -114,8 +113,8 @@ class leieTemplate
     /**
      * Gets a var
      *
-     * @param (string)
-     * @return (mixed|null)
+     * @param string
+     * @return mixed|null
      */
     public function getVariable( $name )
     {
@@ -125,7 +124,7 @@ class leieTemplate
     /**
      * Processes provided template
      *
-     * @return (string)
+     * @return string
      */
     public function fetch( $filename, $ttl = false )
     {
@@ -150,7 +149,7 @@ class leieTemplate
     /**
      * Includes template
      *
-     * @return (void)
+     * @return void
      */
     public static function includeTemplate( $uri, $data = array() )
     {
@@ -166,7 +165,7 @@ class leieTemplate
     /**
      * Washes the content
      *
-     * @return (string)
+     * @return string
      */
     public static function wash( $content, $type = 'xhtml' )
     {

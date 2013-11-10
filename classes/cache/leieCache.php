@@ -3,7 +3,7 @@
  * @author VaL
  * @copyright Copyright (C) 2011 VaL::bOK
  * @license GNU GPL v2
- * @pakacge leie
+ * @pakacge leie::cache
  */
 
 /**
@@ -33,18 +33,17 @@ class leieCache
     /**
      * Cached content
      *
-     * @var (bytes)
+     * @var bytes
      */
     protected $Content = false;
 
     /**
-     * @param (string) $dir Where content is placed
-     * @param (string) $key a key of content
+     * @param string $dir Where content is placed
+     * @param string $key a key of content
      */
     public function __construct( $key, $dir = false )
     {
         $this->Path = self::getDir( $dir ) . '/' . md5( $key );
-        //$this->ClusterHandler = eZClusterFileHandler::instance( $this->Path );
     }
 
     /**
@@ -54,9 +53,9 @@ class leieCache
      * To clear cache: create index key, find the file, and get the list of cache filepaths which is related to this key.
      * After that purge these files.
      *
-     * @param (array) $indexList array( 'nameID' => 1, 'confirmationNumber' = 2 )
+     * @param array $indexList array( 'nameID' => 1, 'confirmationNumber' = 2 )
      *
-     * @return (void)
+     * @return void
      */
     public function setIndexList( $indexList )
     {
@@ -83,8 +82,8 @@ class leieCache
     /**
      * Fetches index by key
      *
-     * @param (string) $value Index key
-     * @return (bytes)
+     * @param string $value Index key
+     * @return bytes
      */
     protected static function fetchIndex( $key )
     {
@@ -97,10 +96,10 @@ class leieCache
     /**
      * Stores index value by
      *
-     * @param (string) $key Index key
-     * @param (array) $valueList What should be stored
+     * @param string $key Index key
+     * @param array $valueList What should be stored
      *
-     * @return (void)
+     * @return void
      */
     protected static function storeIndex( $key, $valueList )
     {
@@ -117,10 +116,10 @@ class leieCache
     /**
      * Returns index key for cache
      *
-     * @param (string) $key Field name
-     * @param (string) $value Its value
+     * @param string $key Field name
+     * @param string $value Its value
      *
-     * @return (string)
+     * @return string
      */
     protected static function getIndexKey( $key, $value )
     {
@@ -130,7 +129,7 @@ class leieCache
     /**
      * Returns dir path for cache
      *
-     * @return (string)
+     * @return string
      */
     protected static function getDir( $dir )
     {
@@ -170,6 +169,8 @@ class leieCache
 
     /**
      * Stores \a $content
+     *
+     * @return void
      */
     public function store( $content )
     {
@@ -197,17 +198,18 @@ class leieCache
     /**
      * Clears current cache
      *
-     * @return (void)
+     * @return void
      */
     public function delete()
     {
         @unlink( $this->Path );
+        $this->Content = false;
     }
 
     /**
      * Clears cache by dir/filename
      *
-     * @param (string) $dir
+     * @param string $dir
      */
     public static function clearByPath( $path = '' )
     {
@@ -217,9 +219,9 @@ class leieCache
     /**
      * Deletes file or dir
      *
-     * @param (string) Dir or path to filename
+     * @param string Dir or path to filename
      *
-     * @return (void)
+     * @return void
      */
     protected static function deleteByPath( $path )
     {
@@ -235,9 +237,9 @@ class leieCache
     /**
      * Clears cache by keys
      *
-     * @param (array) $indexList array( 'nameID' => 1, 'nameID' => 2 )
+     * @param array $indexList array( 'nameID' => 1, 'nameID' => 2 )
      *
-     * @return (void)
+     * @return void
      */
     public static function clearByIndexList( $indexList = array() )
     {
@@ -258,13 +260,12 @@ class leieCache
     /**
      * Clears all leie cache
      *
-     * @return (void)
+     * @return void
      */
     public static function clearAll()
     {
         self::clearByPath();
     }
-
 }
 
 ?>

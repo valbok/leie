@@ -3,7 +3,7 @@
  * @author VaL
  * @copyright Copyright (C) 2011 VaL::bOK
  * @license GNU GPL v2
- * @package leie
+ * @package leie::i18n
  */
 
 /**
@@ -15,7 +15,7 @@ class leieI18n
     /**
      * Translates string to requested language
      *
-     * @return (string)
+     * @return string
      */
     public static function tr( $context, $string, $params = array() )
     {

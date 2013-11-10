@@ -3,9 +3,8 @@
  * @author VaL
  * @copyright Copyright (C) 2011 VaL::bOK
  * @license GNU GPL v2
- * @package leie
+ * @package leie::mail
  */
-
 
 /**
  * Class to handle sending emails
@@ -15,7 +14,7 @@ class leieMtaTransport
     /**
      * Sends email using mail()
      *
-     * @return (void)
+     * @return void
      * @exception leieRunTimeException
      */
     public static function send( $emailFrom, $emailToList, $subject, $content )
@@ -56,22 +55,22 @@ class leieSmtpTransport
 {
 
     /**
-     * @var (string)
+     * @var string
      */
     protected $Host = false;
 
     /**
-     * @var (string)
+     * @var string
      */
     protected $Username = false;
 
     /**
-     * @var (string)
+     * @var string
      */
     protected $Password = false;
 
     /**
-     * @var (string)
+     * @var string
      */
     protected $Port = false;
 
@@ -89,7 +88,7 @@ class leieSmtpTransport
     /**
      * Sends email using mail()
      *
-     * @return (void)
+     * @return void
      * @exception leieRunTimeException
      */
     public function send( $emailFrom, $emailToList, $subject, $content )

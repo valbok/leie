@@ -3,7 +3,7 @@
  * @author VaL
  * @copyright Copyright (C) 2011 VaL::bOK
  * @license GNU GPL v2
- * @package leie
+ * @package leie::log
  */
 
 /**
@@ -18,21 +18,32 @@ class leieLog
     /**
      * Inits file names
      *
-     * @param (string)
-     * @param (string)
-     * @param (string)
+     * @param string
+     * @param string
+     * @param string
      */
     public function __construct( $errorFile = false, $debugFile = false, $noticeFile = false )
     {
-        self::$ErrorFile = $errorFile ? $errorFile : 'var/log/error.log';
-        self::$DebugFile = $debugFile ? $debugFile : 'var/log/debug.log';
-        self::$NoticeFile = $noticeFile ? $noticeFile : 'var/log/notice.log';
+        if ( $errorFile )
+        {
+            self::$ErrorFile = $errorFile;
+        }
+
+        if ( $debugFile )
+        {
+            self::$DebugFile = $debugFile;
+        }
+
+        if ( $noticeFile )
+        {
+            self::$NoticeFile = $noticeFile;
+        }
     }
 
     /**
      * Append error text to log
      *
-     * @return (bool)
+     * @return bool
      */
     public static function writeError( $text )
     {
@@ -42,7 +53,7 @@ class leieLog
     /**
      * Appends simple/debug text to log
      *
-     * @return (bool)
+     * @return bool
      */
     public static function writeDebug( $text )
     {
@@ -52,7 +63,7 @@ class leieLog
     /**
      * Appends simple/debug text to log
      *
-     * @return (bool)
+     * @return bool
      */
     public static function writeNotice( $text )
     {
@@ -62,7 +73,7 @@ class leieLog
     /**
      * Writes \a $string to \a $fileName file
      *
-     * @return (bool)
+     * @return bool
      * @todo Add rotation
      */
     protected static function writeFile( $fileName, $string )
@@ -87,9 +98,9 @@ class leieLog
     }
 
     /**
-     * Returns ip uf current session
+     * Returns ip of current session
      *
-     * @return (string)
+     * @return string
      */
     public static function getCurrentIP()
     {

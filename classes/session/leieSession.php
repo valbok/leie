@@ -3,7 +3,7 @@
  * @author VaL
  * @copyright Copyright (C) 2011 VaL::bOK
  * @license GNU GPL v2
- * @package leie
+ * @package leie::session
  */
 
 /**
@@ -14,28 +14,24 @@ class leieSession
     /**
      * User ID of logged in user
      *
-     * @var (int)
+     * @var int
      */
     static protected $UserID = 0;
 
     /**
-     * Has session started
-     *
-     * @var (bool)
+     * @var bool
      */
     static protected $HasStarted = false;
 
     /**
-     * Has session started
-     *
-     * @var (bool)
+     * @var bool
      */
     static protected $TTL = 0;
 
     /**
      * Starts a session if needed
      *
-     * @return (bool)
+     * @return bool
      */
     public static function start( $cookieTimeout = false )
     {
@@ -78,7 +74,7 @@ class leieSession
     /**
      * Starts session
      *
-     * @return (bool)
+     * @return bool
      */
     public static function forceStart()
     {
@@ -90,7 +86,7 @@ class leieSession
      * Removes the current session and resets session variables.
      * Note: implicit stops session as well!
      *
-     * @return (bool) Depending on if session was removed.
+     * @return bool Depending on if session was removed.
      */
     static public function stop()
     {
@@ -107,7 +103,7 @@ class leieSession
     /**
      * Regenerates the session
      *
-     * @return (bool)
+     * @return bool
      */
     public static function regenerate()
     {
@@ -123,7 +119,7 @@ class leieSession
     /**
      * Sets user ID to session
      *
-     * @return (void)
+     * @return void
      */
     static public function setUserID( $userID = 0 )
     {
@@ -141,7 +137,7 @@ class leieSession
     /**
      * Returns user ID
      *
-     * @return (int)
+     * @return int
      */
     public static function getUserID()
     {
@@ -151,7 +147,7 @@ class leieSession
     /**
      * Set session value (wrapper)
      *
-     * @return (bool)
+     * @return bool
      */
     static public function set( $key, $value )
     {
