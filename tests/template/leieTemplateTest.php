@@ -16,7 +16,7 @@ class leieTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testSetVar()
     {
-        $tpl = new leieTemplate( 'tests/templates' );
+        $tpl = new leieTemplate( 'tests/template/templates' );
         $tpl->setVariable( 'name', 'name' );
         $tpl->setVariable( 'key', 'key' );
         $tpl->setVariable( 'var', 'var' );
