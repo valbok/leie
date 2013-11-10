@@ -5,13 +5,13 @@ class leieImageTest extends PHPUnit_Framework_TestCase
 {
     public function testAnalyzeJPG()
     {
-        $r = leieImage::get( dirname( __FILE__ ) . '/image/img/morke.jpg' );
+        $r = leieImage::get( dirname( __FILE__ ) . '/img/morke.jpg' );
         $this->assertEquals( 'image/jpeg', $r->getMime() );
     }
 
     public function testAnalyzeImagePHP()
     {
-        $r = leieImage::get( dirname( __FILE__ ) . '/image/img/morke.php' );
+        $r = leieImage::get( dirname( __FILE__ ) . '/img/morke.php' );
         $this->assertEquals( 'image/jpeg', $r->getMime() );
     }
 
@@ -20,7 +20,7 @@ class leieImageTest extends PHPUnit_Framework_TestCase
      */
     public function testAnalyzeNotExisting()
     {
-        $r = leieImage::get( dirname( __FILE__ ) . '/image/img/NO-EX.gif' );
+        $r = leieImage::get( dirname( __FILE__ ) . '/img/NO-EX.gif' );
     }
 
     /**
@@ -28,12 +28,12 @@ class leieImageTest extends PHPUnit_Framework_TestCase
      */
     public function testAnalyzePHP()
     {
-        $r = leieImage::get( dirname( __FILE__ ) . '/image/img/shell.php' )->getAnalyzer();
+        $r = leieImage::get( dirname( __FILE__ ) . '/img/shell.php' )->getAnalyzer();
     }
 
     public function testScaleDown()
     {
-        $p = dirname( __FILE__ ) . '/image/img/morke.jpg';
+        $p = dirname( __FILE__ ) . '/img/morke.jpg';
         $i = leieImage::get( $p )->scale( 100, 100 );
 
         $this->assertEquals( 100, $i->getWidth() );
@@ -42,7 +42,7 @@ class leieImageTest extends PHPUnit_Framework_TestCase
 
     public function testResizeDown()
     {
-        $p = dirname( __FILE__ ) . '/image/img/morke.jpg';
+        $p = dirname( __FILE__ ) . '/img/morke.jpg';
         $i = leieImage::get( $p )->resize( 100, 100 );
 
         $this->assertEquals( 100, $i->getWidth() );
@@ -51,8 +51,8 @@ class leieImageTest extends PHPUnit_Framework_TestCase
 
     public function testConvertToGrayscale()
     {
-        $p = dirname( __FILE__ ) . '/image/img/morke.jpg';
-        $rp = dirname( __FILE__ ) . '/image/img/morke_grayscaled.jpg';
+        $p = dirname( __FILE__ ) . '/img/morke.jpg';
+        $rp = dirname( __FILE__ ) . '/img/morke_grayscaled.jpg';
         $i = leieImage::get( $p );
         $r = $i->convertToGrayscale( $rp );
         $this->assertEquals( 'image/jpeg', $r->getMime() );
@@ -63,7 +63,7 @@ class leieImageTest extends PHPUnit_Framework_TestCase
 
     public function testGetPixelColor()
     {
-        $p = dirname( __FILE__ ) . '/image/img/morke.jpg';
+        $p = dirname( __FILE__ ) . '/img/morke.jpg';
         $r = leieImage::get( $p );
         $p = $r->getPixelColor( 0, 0 );
         $this->assertTrue( is_array($p) );
@@ -72,7 +72,7 @@ class leieImageTest extends PHPUnit_Framework_TestCase
 
     public function testGetAveragePixelValue()
     {
-        $p = dirname( __FILE__ ) . '/image/img/morke.jpg';
+        $p = dirname( __FILE__ ) . '/img/morke.jpg';
         $r = leieImage::get( $p );
         $p = $r->resize( 8, 8 )->getAveragePixelValue();
         $this->assertTrue( is_double( $p ) );
@@ -80,19 +80,19 @@ class leieImageTest extends PHPUnit_Framework_TestCase
 
     public function testAverageHash()
     {
-        $h = leieImage::get( dirname( __FILE__ ) . '/image/img/morke.jpg' )->getAverageHash();
+        $h = leieImage::get( dirname( __FILE__ ) . '/img/morke.jpg' )->getAverageHash();
 	//todo
     }
 
     public function testDifferenceHash()
     {
-        $h = @leieImage::get( dirname( __FILE__ ) . '/image/img/tits.jpg' )->getDifferenceHash();
+        $h = @leieImage::get( dirname( __FILE__ ) . '/img/tits.jpg' )->getDifferenceHash();
 	//var_dump($h);
     }
 
     public function testGifHash()
     {
-        $h = @leieImage::get( dirname( __FILE__ ) . '/image/img/1.gif' )->getDifferenceHash();
+        $h = @leieImage::get( dirname( __FILE__ ) . '/img/1.gif' )->getDifferenceHash();
 	//var_dump($h);
     }
 
@@ -100,9 +100,9 @@ class leieImageTest extends PHPUnit_Framework_TestCase
     {
 	//todo
 	return;
-        $h0 = @leieImage::get( dirname( __FILE__ ) . '/image/img/madonna.jpg' )->getDifferenceHash();
-        $h1 = @leieImage::get( dirname( __FILE__ ) . '/image/img/madonna-a.jpg' )->getDifferenceHash();
-        $h2 = @leieImage::get( dirname( __FILE__ ) . '/image/img/madonna-a1.jpg' )->getDifferenceHash();
+        $h0 = @leieImage::get( dirname( __FILE__ ) . '/img/madonna.jpg' )->getDifferenceHash();
+        $h1 = @leieImage::get( dirname( __FILE__ ) . '/img/madonna-a.jpg' )->getDifferenceHash();
+        $h2 = @leieImage::get( dirname( __FILE__ ) . '/img/madonna-a1.jpg' )->getDifferenceHash();
     }
 
     public function testPerceptualHashDst()
@@ -110,12 +110,12 @@ class leieImageTest extends PHPUnit_Framework_TestCase
 	//todo
 	return;
 
-        $h0 = @leieImage::get( dirname( __FILE__ ) . '/image/img/madonna.jpg' )->getDifferenceHash();
-        $h = @leieImage::get( dirname( __FILE__ ) . '/image/img/madonna-a.jpg' )->getPerceptualHash();
-        $hb = @leieImage::get( dirname( __FILE__ ) . '/image/img/madonna-a-big.jpg' )->getPerceptualHash();
-        $hd = @leieImage::get( dirname( __FILE__ ) . '/image/img/madonna-a.jpg' )->getDifferenceHash();
-        $hbd = @leieImage::get( dirname( __FILE__ ) . '/image/img/madonna-a-big.jpg' )->getDifferenceHash();
-        $h2 = @leieImage::get( dirname( __FILE__ ) . '/image/img/madonna-a1.jpg' )->getPerceptualHash();
+        $h0 = @leieImage::get( dirname( __FILE__ ) . '/img/madonna.jpg' )->getDifferenceHash();
+        $h = @leieImage::get( dirname( __FILE__ ) . '/img/madonna-a.jpg' )->getPerceptualHash();
+        $hb = @leieImage::get( dirname( __FILE__ ) . '/img/madonna-a-big.jpg' )->getPerceptualHash();
+        $hd = @leieImage::get( dirname( __FILE__ ) . '/img/madonna-a.jpg' )->getDifferenceHash();
+        $hbd = @leieImage::get( dirname( __FILE__ ) . '/img/madonna-a-big.jpg' )->getDifferenceHash();
+        $h2 = @leieImage::get( dirname( __FILE__ ) . '/img/madonna-a1.jpg' )->getPerceptualHash();
 
     }
 }
