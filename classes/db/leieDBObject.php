@@ -291,7 +291,8 @@ abstract class leieDBObject
                 continue;
             }
 
-            $q->set( $name, $q->bindValue( $value ) );
+            // TODO: check if $value is hex
+            $q->set( $name, strpos( $value, '0x' ) === false ? $q->bindValue( $value ) : $value );
         }
     }
 
