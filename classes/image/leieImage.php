@@ -225,7 +225,12 @@ class leieImage
      */
     public function getAverageHash()
     {
-        $i = $this->resize( 8, 8 )->convertToGrayscale();
+        $i = $this->resize( 8, 8 );
+        $p = $i->getPath();
+        $i = $i->convertToGrayscale();
+        @unlink( $p );
+        $p = $i->getPath();
+
         $averageValue = $i->getAveragePixelValue();
         $result = "";
         for ( $y = 0; $y < 8; $y++ )
@@ -242,6 +247,8 @@ class leieImage
         {
             $hex = str_repeat( '0', 16 - $len ) . $hex;
         }
+
+        @unlink( $p );
 
         return $hex;
     }
@@ -284,7 +291,12 @@ class leieImage
      */
     public function getDifferenceHash()
     {
-        $i = $this->resize( 8, 8 )->convertToGrayscale();
+        $i = $this->resize( 8, 8 );
+        $p = $i->getPath();
+        $i = $i->convertToGrayscale();
+        @unlink( $p );
+        $p = $i->getPath();
+
         $previousPixel = $i->getPixel( 7, 7 );
         $result = "";
         for ( $y = 0; $y < 8; $y = $y + 2 )
@@ -311,6 +323,8 @@ class leieImage
         {
             $hex = str_repeat( '0', 16 - $len ) . $hex;
         }
+
+        @unlink( $p );
 
         return $hex;
     }
@@ -489,7 +503,12 @@ class leieImage
      */
     public function getPerceptualHash()
     {
-        $i = $this->resize( 32, 32 )->convertToGrayscale();
+        $i = $this->resize( 32, 32 );
+        $p = $i->getPath();
+        $i = $i->convertToGrayscale();
+        @unlink( $p );
+        $p = $i->getPath();
+
         $dct = self::cropArray( $i->getDCT(), 0, 0, 8, 8 );
         $median = self::getAverageDCTValue( $dct );
 
@@ -508,6 +527,8 @@ class leieImage
         {
             $hex = str_repeat( '0', 16 - $len ) . $hex;
         }
+
+        @unlink( $p );
 
         return $hex;
     }
