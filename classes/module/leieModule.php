@@ -112,6 +112,16 @@ abstract class leieModule
     }
 
     /**
+     * Returns submitted post or get var
+     *
+     * @return string
+     */
+    public function get( $name, $required = true, $default = false )
+    {
+        return $this->hasPOST( $name ) ? $this->getPOST( $name ) : $this->getGET( $name, $required, $default );
+    }
+
+    /**
      * Checks if post var has been submitted
      *
      * @return (bool)

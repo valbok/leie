@@ -132,8 +132,8 @@ abstract class leieSolrBaseDocument
 
         try
         {
-            $client->addDocument( $doc );
-            $client->commit();
+            @$client->addDocument( $doc );
+            @$client->commit();
         }
         catch ( Exception $e )
         {
@@ -170,8 +170,8 @@ abstract class leieSolrBaseDocument
         try
         {
             $client = self::getClient();
-            $client->deleteById( $id );
-            $client->commit();
+            @$client->deleteById( $id );
+            @$client->commit();
         }
         catch ( Exception $e )
         {
